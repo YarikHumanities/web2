@@ -25,4 +25,5 @@ jobs:
         run: |
           npm run eslint:check
           npm run stylelint:check
+          npm run format:fix
           npm run format:check
