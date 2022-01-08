@@ -17,11 +17,11 @@ async function sendMail(options) {
     await transport.sendMail(options);
     return { success: true };
   } catch (error) {
-    throw new Error(error?.message);
+    throw error_custom("Sending error", 500);
   }
 }
 const from = `From text message - ${process.env.EMAIL_ADRESS}`;
-async function formSubmit(formData) {
+function formSubmit(formData) {
   let html = "";
   for (const option in formData) {
     html += option + " : " + formData[option] + "<br/>";
@@ -38,10 +38,16 @@ const history = new Map();
 const rateLimit = (ip, limit = 3) => {
   const map_var = history.get(ip) || 0;
   if (map_var > limit) {
-    throw new Error();
+    throw error_custom("Too many requests", 429);
   }
   history.set(ip, map_var + 1);
 };
+
+function error_custom(message, status) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
 
 const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nameValid = /[a-zA-ZЁёА-я]+$/;
@@ -49,42 +55,32 @@ const nameValid = /[a-zA-ZЁёА-я]+$/;
 const validate = (body) => {
   const { email, name, password, confirmPassword } = body;
   if (!email || !name || !password || !confirmPassword) {
-    throw new Error();
+    throw error_custom("Empty fields of field", 400);
   }
   if (!emailValid.test(email)) {
-    throw new Error();
+    throw error_custom("Email is not available", 400);
   }
   if (!nameValid.test(name)) {
-    throw new Error();
+    throw error_custom("Name is not available", 400);
   }
   if (password !== confirmPassword) {
-    throw new Error();
+    throw error_custom("Passwords have to match", 400);
   }
 };
 
 module.exports = async (req, res) => {
   try {
     rateLimit(req.headers["x-real-ip"], 5);
-  } catch (e) {
-    return res.status(429).json({
-      status: 429,
-      errors: ["too many requests"],
-      result: {
-        success: false,
-      },
-    });
-  }
-  try {
     validate(req.body);
+    const result = await formSubmit(req.body);
+    res.json({ result });
   } catch (e) {
-    return res.status(403).json({
-      status: 403,
-      errors: ["Validation error"],
+    return res.status(e.status).json({
+      status: e.status,
+      errors: [e.message],
       result: {
         success: false,
       },
     });
   }
-  const result = await formSubmit(req.body);
-  res.json({ result });
 };

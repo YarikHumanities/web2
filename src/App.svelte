@@ -5,22 +5,19 @@
   const formData = {};
   const submit = async () => {
     isLoading = true;
-    try{
-    const response = await fetch("/api/sendMail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(formData),
-    });
-    const result = await response.json();
-    resultText.set(result.result.success ? "Success!" : "Failure");
-    
-    }
-    catch(e){
+    try {
+      const response = await fetch("/api/sendMail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      resultText.set(result.result.success ? "Success!" : "Failure");
+    } catch (e) {
       result.set("Error", e.message);
-    }
-    finally{
+    } finally {
       isLoading = false;
     }
   };
