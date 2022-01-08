@@ -5,6 +5,7 @@
   const formData = {};
   const submit = async () => {
     isLoading = true;
+    try{
     const response = await fetch("/api/sendMail", {
       method: "POST",
       headers: {
@@ -14,7 +15,14 @@
     });
     const result = await response.json();
     resultText.set(result.result.success ? "Success!" : "Failure");
-    isLoading = false;
+    
+    }
+    catch(e){
+      result.set("Error", e.message);
+    }
+    finally{
+      isLoading = false;
+    }
   };
 </script>
 
