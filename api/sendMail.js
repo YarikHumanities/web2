@@ -2,8 +2,8 @@ import { createTransport } from "nodemailer";
 import sanitizeHtml from "sanitize-html";
 require("dotenv").config();
 
-const transport = createTransport(
-  {host: process.env.EMAIL_HOST,
+const transport = createTransport({
+  host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,
   auth: {
@@ -14,7 +14,6 @@ const transport = createTransport(
 
 async function sendMail(options) {
   try {
-    
     await transport.sendMail(options);
     return { success: true };
   } catch (error) {
@@ -37,13 +36,11 @@ async function formSubmit(formData) {
 
 const history = new Map();
 const rateLimit = (ip, limit = 3) => {
-  if (!history.has(ip)) {
-    history.set(ip, 0);
-  }
-  if (history.get(ip) > limit) {
+  const map_var = history.get(ip)||0;
+  if (map_var > limit) {
     throw new Error();
   }
-  history.set(ip, history.get(ip) + 1);
+  history.set(ip, map_var + 1);
 };
 
 const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
