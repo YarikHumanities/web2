@@ -2,21 +2,19 @@ import { createTransport } from "nodemailer";
 import sanitizeHtml from "sanitize-html";
 require("dotenv").config();
 
-function getTransporter() {
-  return createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_ADRESS,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-}
+const transport = createTransport(
+  {host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_ADRESS,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 async function sendMail(options) {
   try {
-    const transport = getTransporter();
+    
     await transport.sendMail(options);
     return { success: true };
   } catch (error) {
