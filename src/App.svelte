@@ -14,7 +14,9 @@
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      resultText.set(result.result.success ? "Success!" : result.errors.join(";"));
+      resultText.set(
+        result.result.success ? "Success!" : result.errors.join(";"),
+      );
       //resultText.set("Success!");
       //result.set(responseJSON.result.success ? "success":"failure")
     } catch (e) {
