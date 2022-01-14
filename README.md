@@ -1,3 +1,7 @@
+[Lab-2](https://web2-d6kyi5gqx-yarikhumanities.vercel.app/)
+
+
+And if you want to clone and use it in localhost:
 # Svelte Example
 
 This directory is a brief example of a [Svelte](https://svelte.dev/) site that can be deployed with Vercel and zero-configuration. If you need to use API Routes, we recommend using our [SvelteKit example](https://github.com/vercel/vercel/tree/main/examples/sveltekit).
